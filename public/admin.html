@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Portfolio</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="auth-screen">
+    <div class="auth-card">
+      <h1>Admin Login</h1>
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required />
+        </div>
+        <div id="login-error" class="form-error" hidden></div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="admin-screen" hidden>
+    <header class="admin-header">
+      <div class="container">
+        <a href="/" class="back-link">← Portfolio</a>
+        <h1 class="admin-title">Project Manager</h1>
+        <div class="header-actions">
+          <button id="change-password-btn" class="btn btn-ghost">Change Password</button>
+          <button id="logout-btn" class="btn btn-ghost">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container admin-main">
+      <div class="admin-toolbar">
+        <h2>Projects <span id="project-count" class="count-badge">0</span></h2>
+        <button id="add-project-btn" class="btn btn-primary">+ Add Project</button>
+      </div>
+
+      <div id="admin-project-grid" class="project-grid admin-grid"></div>
+    </main>
+  </div>
+
+  <!-- Add / Edit Modal -->
+  <div id="project-modal" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Add Project</h2>
+        <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
+      </div>
+      <form id="project-form" enctype="multipart/form-data" novalidate>
+        <input type="hidden" id="project-id" value="" />
+
+        <div class="form-group">
+          <label for="proj-title">Title <span class="required">*</span></label>
+          <input id="proj-title" type="text" placeholder="My Awesome Project" required />
+        </div>
+
+        <div class="form-group">
+          <label for="proj-description">Description <span class="required">*</span></label>
+          <textarea id="proj-description" rows="3" placeholder="A brief description of what this project is about…" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="proj-demo">Demo URL</label>
+          <input id="proj-demo" type="url" placeholder="https://demo.example.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="proj-blog">Blog Post URL</label>
+          <input id="proj-blog" type="url" placeholder="https://blog.example.com/my-post" />
+        </div>
+
+        <div class="form-group">
+          <label for="proj-thumbnail">Thumbnail Image</label>
+          <div class="file-drop-zone" id="drop-zone">
+            <div id="drop-zone-content">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <p>Drag & drop an image or <label for="proj-thumbnail" class="file-browse-link">browse</label></p>
+              <p class="file-hint">PNG, JPG, GIF, WebP up to 10 MB</p>
+            </div>
+            <div id="thumbnail-preview" hidden>
+              <img id="preview-img" src="" alt="Preview" />
+              <button type="button" id="remove-thumbnail-btn" class="remove-thumb-btn" aria-label="Remove image">&times;</button>
+            </div>
+            <input id="proj-thumbnail" type="file" accept="image/*" class="file-input" />
+          </div>
+        </div>
+
+        <div id="form-error" class="form-error" hidden></div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancel-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" id="save-btn" class="btn btn-primary">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="password-modal" class="modal-overlay" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Change Password</h2>
+        <button class="modal-close" id="pw-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <form id="password-form" novalidate>
+        <div class="form-group">
+          <label for="current-password">Current Password</label>
+          <input id="current-password" type="password" required />
+        </div>
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input id="new-password" type="password" placeholder="Minimum 8 characters" required />
+        </div>
+        <div id="pw-error" class="form-error" hidden></div>
+        <div class="modal-actions">
+          <button type="button" id="pw-cancel-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="modal-overlay" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Delete Project</h2>
+      </div>
+      <p class="delete-confirm-text">Are you sure you want to delete "<span id="delete-project-name"></span>"? This cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="delete-cancel-btn" class="btn btn-ghost">Cancel</button>
+        <button id="delete-confirm-btn" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
